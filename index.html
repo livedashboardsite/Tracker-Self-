@@ -1,0 +1,973 @@
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prathamesh Thakur · AI Domination</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+/* ─── TOKENS ─────────────────────────────────────────── */
+:root {
+  --ink:   #0d1117;
+  --ink2:  #1c2333;
+  --sub:   #6e7a8a;
+  --dim:   #9ba8b7;
+  --line:  #e4e8ed;
+  --bg:    #f7f8fa;
+  --white: #ffffff;
+  --p1: #2563eb; --p1a: rgba(37,99,235,.1);
+  --p2: #059669; --p2a: rgba(5,150,105,.1);
+  --p3: #d97706; --p3a: rgba(217,119,6,.1);
+  --p4: #dc2626; --p4a: rgba(220,38,38,.1);
+  --p5: #7c3aed; --p5a: rgba(124,58,237,.1);
+  --p6: #db2777; --p6a: rgba(219,39,119,.1);
+  --r: 14px;
+}
+[data-theme="dark"] {
+  --ink:   #edf2f7; --ink2: #a0aec0;
+  --sub:   #718096; --dim: #4a5568;
+  --line:  #2d3748; --bg: #0f1117;
+  --white: #1a202c;
+  --p1a: rgba(37,99,235,.15); --p2a: rgba(5,150,105,.15);
+  --p3a: rgba(217,119,6,.15); --p4a: rgba(220,38,38,.15);
+  --p5a: rgba(124,58,237,.15); --p6a: rgba(219,39,119,.15);
+}
+
+/* ─── RESET ──────────────────────────────────────────── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:15px}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg); color:var(--ink);
+  min-height:100vh; line-height:1.6;
+  transition:background .3s,color .3s;
+}
+
+/* ─── SCROLLBAR ──────────────────────────────────────── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+
+/* ─── LAYOUT ─────────────────────────────────────────── */
+.shell{max-width:1080px;margin:0 auto;padding:28px 20px 60px}
+
+/* ─── TOPBAR ─────────────────────────────────────────── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:24px;border-bottom:1px solid var(--line);
+  margin-bottom:28px;gap:12px;flex-wrap:wrap;
+}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand-name{
+  font-family:'Fraunces',serif;font-size:clamp(1.5rem,4vw,2rem);
+  font-weight:700;letter-spacing:-.5px;line-height:1;
+}
+.brand-name em{font-style:normal;color:var(--p1)}
+.brand-tag{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sub);font-family:'DM Mono',monospace}
+
+.topbar-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:99px;font-size:.72rem;font-weight:500;
+  border:1px solid var(--line);background:var(--white);cursor:default;
+  color:var(--ink2);transition:.15s;white-space:nowrap;
+}
+.streak-pill{color:var(--p3);border-color:var(--p3a);background:var(--p3a)}
+.streak-pill .fire{font-size:.9rem}
+
+button.icon-btn{
+  width:36px;height:36px;border-radius:99px;
+  border:1px solid var(--line);background:var(--white);
+  cursor:pointer;font-size:.95rem;display:grid;place-items:center;
+  color:var(--ink);transition:background .15s,transform .15s;
+}
+button.icon-btn:hover{background:var(--line);transform:scale(1.08)}
+
+/* ─── QUOTE ──────────────────────────────────────────── */
+.quote{
+  margin-bottom:24px;padding:14px 18px;
+  border-left:3px solid var(--p1);
+  background:var(--p1a);border-radius:0 var(--r) var(--r) 0;
+  font-size:.8rem;color:var(--sub);
+  font-family:'DM Sans',sans-serif;font-style:italic;
+  animation:fadeSlide .5s both;
+}
+
+/* ─── DAILY TASK CARD ────────────────────────────────── */
+.daily-card{
+  background:var(--white);border:1px solid var(--line);
+  border-radius:var(--r);padding:18px 20px;
+  margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  animation:fadeSlide .4s .05s both;
+}
+.daily-icon{
+  width:42px;height:42px;border-radius:10px;
+  background:var(--p5a);display:grid;place-items:center;
+  font-size:1.1rem;flex-shrink:0;
+}
+.daily-body{flex:1;min-width:180px}
+.daily-label{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sub);font-family:'DM Mono',monospace;margin-bottom:3px}
+.daily-task{font-size:.9rem;font-weight:600;color:var(--ink)}
+.daily-phase{font-size:.7rem;color:var(--sub);margin-top:2px}
+.daily-actions{display:flex;gap:8px}
+.btn-sm{
+  padding:7px 14px;border-radius:8px;font-size:.72rem;font-weight:600;
+  border:1px solid var(--line);background:var(--white);
+  cursor:pointer;color:var(--ink);transition:.15s;font-family:'DM Sans',sans-serif;
+}
+.btn-sm:hover{background:var(--line)}
+.btn-sm.accent{background:var(--p1);color:#fff;border-color:var(--p1)}
+.btn-sm.accent:hover{opacity:.88}
+
+/* ─── PHASE TIMER ────────────────────────────────────── */
+.timer-bar{
+  background:var(--white);border:1px solid var(--line);
+  border-radius:var(--r);padding:16px 20px;
+  margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  animation:fadeSlide .4s .1s both;
+}
+.timer-label{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sub);font-family:'DM Mono',monospace;white-space:nowrap}
+.timer-display{
+  font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:500;
+  color:var(--ink);letter-spacing:.05em;min-width:90px;text-align:center;
+}
+.timer-display.running{color:var(--p2)}
+.timer-display.paused{color:var(--p3)}
+.timer-controls{display:flex;gap:6px;margin-left:auto}
+.timer-phase-pick{
+  font-size:.72rem;padding:6px 10px;border-radius:8px;
+  border:1px solid var(--line);background:var(--white);color:var(--ink);
+  font-family:'DM Sans',sans-serif;cursor:pointer;outline:none;
+}
+.timer-total{font-size:.7rem;color:var(--sub);white-space:nowrap;margin-left:4px}
+
+/* ─── MAIN GRID ──────────────────────────────────────── */
+.main-grid{display:grid;grid-template-columns:1fr 288px;gap:20px;align-items:start}
+
+/* ─── PHASE CARD ─────────────────────────────────────── */
+.phase{
+  background:var(--white);border:1px solid var(--line);
+  border-radius:var(--r);margin-bottom:12px;overflow:hidden;
+  transition:border-color .2s,box-shadow .2s;
+  animation:fadeSlide .35s both;
+}
+.phase:nth-child(1){animation-delay:.06s}
+.phase:nth-child(2){animation-delay:.10s}
+.phase:nth-child(3){animation-delay:.14s}
+.phase:nth-child(4){animation-delay:.18s}
+.phase:nth-child(5){animation-delay:.22s}
+.phase:nth-child(6){animation-delay:.26s}
+.phase:hover{box-shadow:0 2px 16px rgba(0,0,0,.07)}
+.phase.done{border-color:var(--p2);box-shadow:0 0 0 1px var(--p2a)}
+
+.ph-head{
+  padding:15px 18px;cursor:pointer;
+  display:flex;align-items:center;gap:12px;
+  border-left:3px solid var(--pc);
+  transition:background .15s;
+}
+.ph-head:hover{background:var(--bg)}
+.ph-num{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--pc);opacity:.8;flex-shrink:0}
+.ph-title{font-weight:600;font-size:.92rem;flex:1}
+.ph-age{font-size:.65rem;color:var(--sub);font-family:'DM Mono',monospace;flex-shrink:0}
+.ph-income{
+  font-family:'DM Mono',monospace;font-size:.65rem;
+  color:var(--p2);background:var(--p2a);
+  padding:3px 9px;border-radius:99px;flex-shrink:0;
+}
+.ph-done-badge{
+  font-size:.55rem;font-family:'DM Mono',monospace;letter-spacing:.1em;
+  color:var(--p2);background:var(--p2a);
+  padding:2px 7px;border-radius:99px;border:1px solid var(--p2);
+}
+
+/* mini progress arc */
+.arc-wrap{width:32px;height:32px;position:relative;flex-shrink:0}
+.arc-wrap svg{transform:rotate(-90deg)}
+.arc-bg{fill:none;stroke:var(--line);stroke-width:3}
+.arc-fg{fill:none;stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset .5s ease}
+.arc-txt{
+  position:absolute;inset:0;display:grid;place-items:center;
+  font-family:'DM Mono',monospace;font-size:.42rem;font-weight:500;
+}
+
+/* expand/collapse */
+.ph-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}
+.ph-body.open{max-height:1400px}
+.ph-inner{padding:18px;border-top:1px solid var(--line)}
+
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.col-head{
+  font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--sub);margin-bottom:10px;
+  padding-bottom:6px;border-bottom:1px solid var(--line);
+}
+
+/* task row */
+.task{
+  display:flex;align-items:flex-start;gap:9px;
+  padding:8px 10px;border-radius:9px;margin-bottom:5px;
+  cursor:pointer;transition:background .12s;border:1px solid transparent;
+}
+.task:hover{background:var(--bg)}
+.task.checked{opacity:.45}
+
+.chk{
+  width:17px;height:17px;border-radius:5px;flex-shrink:0;
+  border:1.5px solid var(--line);display:grid;place-items:center;
+  margin-top:2px;transition:background .15s,border-color .15s;
+}
+.task.checked .chk{background:var(--p2);border-color:var(--p2)}
+.chk-tick{font-size:.55rem;color:#fff;display:none}
+.task.checked .chk-tick{display:block}
+
+.task-lbl{font-size:.78rem;flex:1;line-height:1.45}
+.task.checked .task-lbl{text-decoration:line-through}
+.task-tag{
+  font-size:.5rem;font-weight:700;font-family:'DM Mono',monospace;
+  background:var(--p3);color:#fff;padding:1px 5px;border-radius:3px;
+  margin-left:4px;vertical-align:middle;
+}
+
+.note-toggle{
+  width:18px;height:18px;border-radius:4px;flex-shrink:0;margin-top:2px;
+  border:1px solid var(--line);background:none;cursor:pointer;
+  font-size:.6rem;color:var(--sub);display:grid;place-items:center;
+  transition:.15s;
+}
+.note-toggle:hover{border-color:var(--p1);color:var(--p1)}
+.note-toggle.active{border-color:var(--p3);color:var(--p3);background:var(--p3a)}
+
+.note-box{
+  max-height:0;overflow:hidden;transition:max-height .25s ease;
+  margin-left:26px;
+}
+.note-box.open{max-height:120px}
+.note-box textarea{
+  width:100%;margin-top:5px;padding:8px 10px;
+  background:var(--bg);border:1px solid var(--line);
+  border-radius:8px;color:var(--ink);resize:none;outline:none;
+  font-family:'DM Sans',sans-serif;font-size:.75rem;line-height:1.5;
+  transition:border-color .15s;
+}
+.note-box textarea:focus{border-color:var(--p1)}
+
+/* yt */
+.yt-area{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.yt-links{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.yt-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--p4a);border:1px solid color-mix(in srgb,var(--p4) 25%,transparent);
+  color:var(--p4);text-decoration:none;
+  font-size:.7rem;font-weight:500;padding:5px 11px;border-radius:8px;
+  transition:.15s;
+}
+.yt-chip:hover{background:color-mix(in srgb,var(--p4) 20%,transparent);transform:translateY(-1px)}
+.yt-dot{width:5px;height:5px;border-radius:50%;background:var(--p4);flex-shrink:0}
+
+/* ─── SIDEBAR ────────────────────────────────────────── */
+.sidebar{display:flex;flex-direction:column;gap:14px;position:sticky;top:20px}
+
+.widget{
+  background:var(--white);border:1px solid var(--line);
+  border-radius:var(--r);padding:18px;
+  animation:fadeSlide .4s .15s both;
+}
+.w-title{
+  font-size:.7rem;font-family:'DM Mono',monospace;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--sub);margin-bottom:14px;
+  padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+
+/* xp ring */
+.xp-center{display:flex;flex-direction:column;align-items:center;margin:4px 0 16px}
+.xp-ring{position:relative;width:96px;height:96px}
+.xp-ring svg{transform:rotate(-90deg)}
+.xp-ring-bg{fill:none;stroke:var(--line);stroke-width:7}
+.xp-ring-fg{fill:none;stroke-width:7;stroke-linecap:round;stroke:var(--p1);transition:stroke-dashoffset .6s ease}
+.xp-label-wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.xp-lvl{font-family:'Fraunces',serif;font-size:1.7rem;font-weight:700;color:var(--ink);line-height:1}
+.xp-lvl-tag{font-family:'DM Mono',monospace;font-size:.48rem;color:var(--sub);letter-spacing:.15em;margin-top:1px}
+
+.xp-row{display:flex;justify-content:space-between;font-size:.68rem;margin-bottom:4px}
+.xp-row span:first-child{color:var(--sub)}
+.xp-row span:last-child{color:var(--ink);font-family:'DM Mono',monospace;font-weight:500}
+.xp-bar{height:5px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:14px}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--p1),var(--p5));border-radius:99px;transition:width .5s ease}
+
+.stat-line{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:.75rem}
+.stat-line:last-child{border-bottom:none}
+.stat-line .k{color:var(--sub)}
+.stat-line .v{font-family:'DM Mono',monospace;font-weight:500}
+
+/* phase bars */
+.pb-item{margin-bottom:10px}
+.pb-label{display:flex;justify-content:space-between;font-size:.68rem;margin-bottom:4px}
+.pb-label .name{color:var(--ink2);font-weight:500}
+.pb-label .pct{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--sub)}
+.pb-track{height:5px;background:var(--line);border-radius:99px;overflow:hidden}
+.pb-fill{height:100%;border-radius:99px;transition:width .5s ease}
+
+/* streak cal */
+.cal-days-label{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:3px}
+.cal-days-label span{text-align:center;font-family:'DM Mono',monospace;font-size:.48rem;color:var(--sub)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-cell{
+  aspect-ratio:1;border-radius:3px;
+  background:var(--line);transition:.15s;
+}
+.cal-cell.hit{background:var(--p2)}
+.cal-cell.today{outline:2px solid var(--p1);outline-offset:1px}
+
+/* export btn */
+.export-btn{
+  width:100%;padding:9px;border-radius:9px;
+  border:1px solid var(--line);background:var(--white);
+  color:var(--ink2);font-size:.72rem;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-weight:500;
+  transition:.15s;display:flex;align-items:center;justify-content:center;gap:6px;
+  margin-top:4px;
+}
+.export-btn:hover{background:var(--p1);color:#fff;border-color:var(--p1)}
+
+.reset-btn{
+  width:100%;padding:9px;border-radius:9px;
+  border:1px solid var(--line);background:var(--white);
+  color:var(--sub);font-size:.7rem;cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  transition:.15s;margin-top:6px;
+}
+.reset-btn:hover{background:var(--p4a);border-color:var(--p4);color:var(--p4)}
+
+/* ─── CONFETTI ───────────────────────────────────────── */
+#confetti-stage{position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;display:none}
+.conf{position:absolute;width:7px;height:7px;border-radius:1px;animation:cffall linear forwards}
+@keyframes cffall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(700deg);opacity:0}}
+
+/* ─── MODAL ──────────────────────────────────────────── */
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.45);
+  backdrop-filter:blur(6px);z-index:500;
+  display:none;place-items:center;
+}
+.overlay.on{display:grid}
+.modal{
+  background:var(--white);border:1px solid var(--line);
+  border-radius:18px;padding:32px 28px;
+  max-width:360px;width:90%;text-align:center;
+}
+.modal-emoji{font-size:2.6rem;margin-bottom:12px}
+.modal-h{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:700;margin-bottom:6px}
+.modal-p{font-size:.8rem;color:var(--sub);margin-bottom:22px;line-height:1.6}
+.modal-ok{
+  padding:10px 28px;border-radius:10px;
+  background:var(--ink);color:var(--bg);border:none;
+  font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;
+  font-size:.82rem;transition:.15s;
+}
+.modal-ok:hover{opacity:.8}
+
+/* ─── ANIM ───────────────────────────────────────────── */
+@keyframes fadeSlide{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ─── RESPONSIVE ─────────────────────────────────────── */
+@media(max-width:840px){
+  .main-grid{grid-template-columns:1fr}
+  .sidebar{position:static}
+  .cols2{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .timer-bar{flex-direction:column;align-items:flex-start}
+  .timer-controls{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<!-- CONFETTI -->
+<div id="confetti-stage"></div>
+
+<!-- LEVEL MODAL -->
+<div class="overlay" id="modal">
+  <div class="modal">
+    <div class="modal-emoji" id="m-emoji">⚡</div>
+    <div class="modal-h" id="m-title">Level Up!</div>
+    <div class="modal-p" id="m-body">Keep going.</div>
+    <button class="modal-ok" onclick="closeModal()">Keep Going →</button>
+  </div>
+</div>
+
+<div class="shell">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-name">Prathamesh <em>Thakur</em></div>
+      <div class="brand-tag">6-Phase AI Domination · v5.0</div>
+    </div>
+    <div class="topbar-right">
+      <div class="pill streak-pill"><span class="fire">🔥</span><span id="streak-n">0</span>&nbsp;day streak</div>
+      <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">🌙</button>
+    </div>
+  </div>
+
+  <!-- QUOTE -->
+  <div class="quote" id="quote-bar"></div>
+
+  <!-- DAILY TASK -->
+  <div class="daily-card" id="daily-card">
+    <div class="daily-icon">🎯</div>
+    <div class="daily-body">
+      <div class="daily-label">Today's Focus Task</div>
+      <div class="daily-task" id="dt-text">Click Randomize to get your daily task →</div>
+      <div class="daily-phase" id="dt-phase"></div>
+    </div>
+    <div class="daily-actions">
+      <button class="btn-sm" onclick="randomTask()">🎲 Randomize</button>
+      <button class="btn-sm accent" id="dt-done-btn" onclick="markDailyDone()" style="display:none">✓ Mark Done</button>
+    </div>
+  </div>
+
+  <!-- PHASE TIMER -->
+  <div class="timer-bar">
+    <div class="timer-label">Phase Timer</div>
+    <select class="timer-phase-pick" id="timer-phase-pick">
+      <option value="">— Pick a phase —</option>
+    </select>
+    <div class="timer-display" id="timer-display">00:00:00</div>
+    <div class="timer-total" id="timer-total"></div>
+    <div class="timer-controls">
+      <button class="btn-sm accent" id="timer-start-btn" onclick="timerToggle()">▶ Start</button>
+      <button class="btn-sm" onclick="timerReset()">↺ Reset</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-grid">
+    <div id="roadmap"></div>
+
+    <aside class="sidebar">
+
+      <!-- XP -->
+      <div class="widget" id="xp-widget">
+        <div class="w-title">Mastery Level</div>
+        <div class="xp-center">
+          <div class="xp-ring">
+            <svg viewBox="0 0 96 96" width="96" height="96">
+              <circle class="xp-ring-bg" cx="48" cy="48" r="40"/>
+              <circle class="xp-ring-fg" id="xp-arc" cx="48" cy="48" r="40"
+                style="stroke-dasharray:251.3;stroke-dashoffset:251.3"/>
+            </svg>
+            <div class="xp-label-wrap">
+              <div class="xp-lvl" id="xp-lvl">1</div>
+              <div class="xp-lvl-tag">LEVEL</div>
+            </div>
+          </div>
+        </div>
+        <div class="xp-row">
+          <span>XP Earned</span><span id="xp-earned">0 XP</span>
+        </div>
+        <div class="xp-row">
+          <span>Next Level</span><span id="xp-next">100 XP away</span>
+        </div>
+        <div class="xp-bar"><div class="xp-bar-fill" id="xp-bar-fill" style="width:0%"></div></div>
+        <div class="stat-line"><span class="k">Tasks Done</span><span class="v" id="s-tasks">0/0</span></div>
+        <div class="stat-line"><span class="k">Overall</span><span class="v" id="s-pct">0%</span></div>
+        <div class="stat-line"><span class="k">Phases Complete</span><span class="v" id="s-phases">0/6</span></div>
+        <div class="stat-line"><span class="k">Study Time Today</span><span class="v" id="s-timer">0m</span></div>
+      </div>
+
+      <!-- PHASE BREAKDOWN -->
+      <div class="widget">
+        <div class="w-title">Phase Progress</div>
+        <div id="phase-bars"></div>
+      </div>
+
+      <!-- STREAK -->
+      <div class="widget">
+        <div class="w-title">Activity — Last 21 Days</div>
+        <div class="cal-days-label">
+          <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div style="margin-top:8px;font-size:.62rem;color:var(--sub)">🟩 Active &nbsp;⬜ Inactive &nbsp;🔷 Today</div>
+      </div>
+
+      <!-- EXPORT -->
+      <div class="widget">
+        <div class="w-title">Export</div>
+        <button class="export-btn" onclick="exportPNG()">⬇ Save Progress as Image</button>
+        <button class="reset-btn" onclick="resetAll()">↺ Reset All Progress</button>
+      </div>
+
+    </aside>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════ */
+const QUOTES = [
+  "The internet is the greatest leverage ever created. Use it.",
+  "You don't rise to the level of your goals. You fall to the level of your systems.",
+  "Ship fast, learn faster. Done beats perfect every time.",
+  "Your future self is watching right now from years ahead.",
+  "Build something 100 people love, not something 1M people kind of like.",
+  "Code is the closest thing to a superpower. Learn it deeply.",
+  "Every expert was once a beginner with a plan.",
+  "The best time to start was yesterday. The second best time is right now.",
+  "In a world of algorithms, be the one who builds them.",
+  "Consistency compounds. Show up every single day."
+];
+
+const PHASES = [
+  {
+    title:"Foundation + Proof", age:"17–18", inc:"₹0–5k", color:"var(--p1)",
+    skills:["HTML/CSS/JS (2026 Standards)","Python for Automation","Linear Algebra [MATH]","Git/GitHub Pro Workflow"],
+    builds:["Cinematic Portfolio","Hotstar-style UI Feed","IMDb API Project","Smart Gate v2 (Auth)"],
+    yt:[
+      {n:"Full Web Dev 2025",l:"https://www.youtube.com/watch?v=66XwG1CLHuU"},
+      {n:"Python for Beginners",l:"https://www.youtube.com/watch?v=_uQrJ0TkZlc"},
+      {n:"Math for ML (3B1B)",l:"https://www.youtube.com/watch?v=fNk_zzaMoSs"}
+    ]
+  },
+  {
+    title:"Full Stack + First Money", age:"18–19", inc:"₹10k–50k", color:"var(--p2)",
+    skills:["Next.js 15 & React 19","Node.js (Express)","MongoDB / PostgreSQL","Freelance Pitching"],
+    builds:["LinkedIn Clone","WhatsApp Real-time Chat","EATNTREAT Cake Shop","Local Biz Landing Pages"],
+    yt:[
+      {n:"Next.js 15 Masterclass",l:"https://www.youtube.com/watch?v=wm5gMKuwSYk"},
+      {n:"MERN Stack 2026",l:"https://www.youtube.com/watch?v=H7m_S-YVv3I"},
+      {n:"Freelancing Guide",l:"https://www.youtube.com/watch?v=yYvT07mZt70"}
+    ]
+  },
+  {
+    title:"AI Integration + Agents", age:"19–20", inc:"₹30k–80k", color:"var(--p3)",
+    skills:["LangChain & CrewAI [AGENTIC]","ML Fundamentals","RAG Architecture","API Engineering"],
+    builds:["Autonomous Research Agent","AI Trend Tracker","AI-Powered CRM Dashboard","GSoC Contribution"],
+    yt:[
+      {n:"AI Agents (LangChain)",l:"https://www.youtube.com/watch?v=lG7Uxts9SXs"},
+      {n:"RAG Explained",l:"https://www.youtube.com/watch?v=trS5S9_V38s"},
+      {n:"ML Specialization",l:"https://www.youtube.com/watch?v=i_LwzRVP7bg"}
+    ]
+  },
+  {
+    title:"SaaS + Brand", age:"20–21", inc:"₹80k–2L", color:"var(--p4)",
+    skills:["System Design","Docker & Kubernetes","AWS Cloud","Product Hunt Strategy"],
+    builds:["Micro-SaaS Launch [OWNERSHIP]","AI SaaS Product","Weekly LinkedIn Builds"],
+    yt:[
+      {n:"System Design for Devs",l:"https://www.youtube.com/watch?v=m8I7eGZzFB0"},
+      {n:"Docker Mastery",l:"https://www.youtube.com/watch?v=pTFZFxd4hbw"},
+      {n:"AWS Certified Guide",l:"https://www.youtube.com/watch?v=k1RI5locZE4"}
+    ]
+  },
+  {
+    title:"Scaling Systems", age:"21–22", inc:"₹1L–3L", color:"var(--p5)",
+    skills:["MLOps (AI Deployment)","Fintech Architecture","Global Freelance Scale","Deep Learning"],
+    builds:["High-Ticket Fintech App","Scalable AI Platform","Intl. Client Portfolio"],
+    yt:[
+      {n:"MLOps for Engineers",l:"https://www.youtube.com/watch?v=9gS9qXas_7A"},
+      {n:"Fintech App Security",l:"https://www.youtube.com/watch?v=N_6f44h-IUA"}
+    ]
+  },
+  {
+    title:"Domination", age:"22–23", inc:"₹1L+ Global", color:"var(--p6)",
+    skills:["Startup Scaling","Flagship Ownership","Wealth Systems"],
+    builds:["1 Flagship Product","Global Personal Brand","Passive Income Engine"],
+    yt:[
+      {n:"How to Build a Startup",l:"https://www.youtube.com/watch?v=0lJKucu6hjE"}
+    ]
+  }
+];
+
+/* ═══════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
+let S = JSON.parse(localStorage.getItem('pt_v5') || 'null') || {
+  tasks:[], notes:{}, activity:{}, lastLevel:1, celebratedPhases:{},
+  timerSeconds:0, timerPhase:'', timerDate:''
+};
+let _currentDailyTask = null;
+
+/* ═══════════════════════════════════════════════
+   SAVE / LOAD
+═══════════════════════════════════════════════ */
+function save(){ localStorage.setItem('pt_v5', JSON.stringify(S)) }
+
+/* ═══════════════════════════════════════════════
+   THEME
+═══════════════════════════════════════════════ */
+function toggleTheme(){
+  const html = document.documentElement;
+  const dark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', dark ? 'light' : 'dark');
+  document.getElementById('theme-btn').textContent = dark ? '🌙' : '☀️';
+}
+
+/* ═══════════════════════════════════════════════
+   QUOTE
+═══════════════════════════════════════════════ */
+document.getElementById('quote-bar').textContent =
+  QUOTES[Math.floor(Math.random() * QUOTES.length)];
+
+/* ═══════════════════════════════════════════════
+   DAILY TASK RANDOMIZER
+═══════════════════════════════════════════════ */
+function randomTask(){
+  const pool = [];
+  PHASES.forEach((p,pi) => {
+    [...p.skills,...p.builds].forEach(t => {
+      if(!S.tasks.includes(pi+'::'+t)) pool.push({pi,p,t});
+    });
+  });
+  if(!pool.length){
+    document.getElementById('dt-text').textContent = '🎉 All tasks complete!';
+    document.getElementById('dt-phase').textContent = '';
+    document.getElementById('dt-done-btn').style.display = 'none';
+    return;
+  }
+  const pick = pool[Math.floor(Math.random()*pool.length)];
+  _currentDailyTask = pick;
+  document.getElementById('dt-text').textContent = pick.t.replace(/\[.*?\]/g,'').trim();
+  document.getElementById('dt-phase').textContent = `Phase ${pick.pi+1}: ${pick.p.title}`;
+  document.getElementById('dt-done-btn').style.display = '';
+}
+
+function markDailyDone(){
+  if(!_currentDailyTask) return;
+  const {pi,t} = _currentDailyTask;
+  const key = pi+'::'+t;
+  if(!S.tasks.includes(key)){
+    S.tasks.push(key);
+    markActivity();
+    save();
+    checkLevelUp();
+    render();
+  }
+  document.getElementById('dt-text').textContent = '✓ Done! Hit Randomize for the next one.';
+  document.getElementById('dt-phase').textContent = '';
+  document.getElementById('dt-done-btn').style.display = 'none';
+  _currentDailyTask = null;
+}
+
+/* ═══════════════════════════════════════════════
+   PHASE TIMER
+═══════════════════════════════════════════════ */
+let timerInterval = null;
+let timerRunning = false;
+let sessionSeconds = 0;
+
+// populate picker
+const pick = document.getElementById('timer-phase-pick');
+PHASES.forEach((p,i) => {
+  const o = document.createElement('option');
+  o.value = i; o.textContent = `Phase ${i+1}: ${p.title}`;
+  pick.appendChild(o);
+});
+
+// restore if same day
+const today = new Date().toISOString().split('T')[0];
+if(S.timerDate === today){ sessionSeconds = S.timerSeconds || 0; }
+else { S.timerSeconds = 0; S.timerDate = today; save(); }
+updateTimerDisplay();
+
+function updateTimerDisplay(){
+  const t = sessionSeconds;
+  const h = String(Math.floor(t/3600)).padStart(2,'0');
+  const m = String(Math.floor((t%3600)/60)).padStart(2,'0');
+  const s = String(t%60).padStart(2,'0');
+  const el = document.getElementById('timer-display');
+  el.textContent = `${h}:${m}:${s}`;
+  el.className = 'timer-display ' + (timerRunning ? 'running' : sessionSeconds>0 ? 'paused' : '');
+  document.getElementById('s-timer').textContent =
+    sessionSeconds >= 3600
+      ? `${Math.floor(sessionSeconds/3600)}h ${Math.floor((sessionSeconds%3600)/60)}m`
+      : `${Math.floor(sessionSeconds/60)}m`;
+}
+
+function timerToggle(){
+  const btn = document.getElementById('timer-start-btn');
+  if(timerRunning){
+    clearInterval(timerInterval); timerRunning = false;
+    btn.textContent = '▶ Resume'; btn.style.background='';
+  } else {
+    timerRunning = true; btn.textContent = '⏸ Pause';
+    timerInterval = setInterval(() => {
+      sessionSeconds++; S.timerSeconds = sessionSeconds; S.timerDate = today; save();
+      updateTimerDisplay();
+    }, 1000);
+  }
+  updateTimerDisplay();
+}
+function timerReset(){
+  clearInterval(timerInterval); timerRunning = false;
+  sessionSeconds = 0; S.timerSeconds = 0; save();
+  document.getElementById('timer-start-btn').textContent = '▶ Start';
+  updateTimerDisplay();
+}
+
+/* ═══════════════════════════════════════════════
+   STREAK / CALENDAR
+═══════════════════════════════════════════════ */
+function markActivity(){
+  S.activity[today] = true; save();
+}
+function getStreak(){
+  let streak = 0, d = new Date();
+  while(true){
+    const k = d.toISOString().split('T')[0];
+    if(S.activity[k]){ streak++; d.setDate(d.getDate()-1); } else break;
+  }
+  return streak;
+}
+function renderCal(){
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  for(let i=20;i>=0;i--){
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const k = d.toISOString().split('T')[0];
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell' + (S.activity[k]?' hit':'') + (k===today?' today':'');
+    cell.title = k;
+    grid.appendChild(cell);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   CONFETTI
+═══════════════════════════════════════════════ */
+function fireConfetti(){
+  const stage = document.getElementById('confetti-stage');
+  stage.innerHTML = ''; stage.style.display = 'block';
+  const cols = ['#2563eb','#059669','#d97706','#dc2626','#7c3aed','#db2777','#f0f9ff'];
+  for(let i=0;i<70;i++){
+    const c = document.createElement('div');
+    c.className = 'conf';
+    const sz = 5+Math.random()*7;
+    c.style.cssText = `left:${Math.random()*100}vw;background:${cols[i%cols.length]};width:${sz}px;height:${sz}px;animation-duration:${1.4+Math.random()*1.4}s;animation-delay:${Math.random()*.6}s;border-radius:${Math.random()>.5?'50%':'2px'}`;
+    stage.appendChild(c);
+  }
+  setTimeout(() => { stage.style.display='none'; stage.innerHTML=''; }, 3200);
+}
+
+/* ═══════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════ */
+function showModal(emoji, title, body){
+  document.getElementById('m-emoji').textContent = emoji;
+  document.getElementById('m-title').textContent = title;
+  document.getElementById('m-body').textContent = body;
+  document.getElementById('modal').classList.add('on');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('on') }
+
+/* ═══════════════════════════════════════════════
+   XP / LEVELS
+═══════════════════════════════════════════════ */
+function getLevel(xp){
+  let level=1, threshold=100;
+  while(xp>=threshold){ level++; xp-=threshold; threshold=Math.floor(threshold*1.3); }
+  return {level, xpIn:xp, threshold};
+}
+
+function checkLevelUp(){
+  const xp = S.tasks.length * 10;
+  const {level} = getLevel(xp);
+  if(level > (S.lastLevel||1)){
+    S.lastLevel = level; save();
+    fireConfetti();
+    setTimeout(()=>showModal('⚡',`Level ${level} Unlocked`,`${S.tasks.length} tasks mastered. You're building something real, Prathamesh.`),400);
+  }
+  PHASES.forEach((p,pi)=>{
+    const all = [...p.skills,...p.builds];
+    const done = all.filter(t=>S.tasks.includes(pi+'::'+t)).length;
+    if(done===all.length && !S.celebratedPhases[pi]){
+      S.celebratedPhases[pi] = true; save();
+      fireConfetti();
+      setTimeout(()=>showModal('🎯',`Phase ${pi+1} Complete`,`"${p.title}" is done. Momentum is everything — keep going.`),600);
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   EXPORT AS IMAGE
+═══════════════════════════════════════════════ */
+function exportPNG(){
+  const widget = document.getElementById('xp-widget');
+  if(!window.html2canvas){ alert('Export library not loaded.'); return; }
+  html2canvas(document.querySelector('.shell'), {
+    backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#f7f8fa',
+    scale:2, useCORS:true, logging:false,
+    ignoreElements: el => el.id==='confetti-stage'
+  }).then(canvas=>{
+    const a = document.createElement('a');
+    a.download = 'prathamesh_roadmap_progress.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER ROADMAP
+═══════════════════════════════════════════════ */
+function render(){
+  document.getElementById('roadmap').innerHTML = PHASES.map((p,pi) => {
+    const all = [...p.skills,...p.builds];
+    const done = all.filter(t=>S.tasks.includes(pi+'::'+t)).length;
+    const pct = Math.round((done/all.length)*100);
+    const circ = 2*Math.PI*13; // r=13 → ~81.68
+    const offset = circ - (pct/100)*circ;
+    const isDone = pct===100;
+
+    return `
+    <div class="phase ${isDone?'done':''}" style="--pc:${p.color}">
+      <div class="ph-head" onclick="togglePhase(${pi},'ph-${pi}')">
+        <span class="ph-num">0${pi+1}</span>
+        <span class="ph-title">${p.title}</span>
+        <span class="ph-age">${p.age}</span>
+        <span class="ph-income">${p.inc}</span>
+        ${isDone?`<span class="ph-done-badge">✓ done</span>`:''}
+        <div class="arc-wrap">
+          <svg viewBox="0 0 32 32" width="32" height="32">
+            <circle class="arc-bg" cx="16" cy="16" r="13"/>
+            <circle class="arc-fg" cx="16" cy="16" r="13"
+              style="stroke:${p.color};stroke-dasharray:${circ.toFixed(1)};stroke-dashoffset:${offset.toFixed(1)}"/>
+          </svg>
+          <div class="arc-txt" style="color:${p.color}">${pct}%</div>
+        </div>
+      </div>
+      <div class="ph-body" id="ph-${pi}">
+        <div class="ph-inner">
+          <div class="cols2">
+            <div>
+              <div class="col-head">Skills</div>
+              ${p.skills.map(t=>taskRow(pi,t)).join('')}
+            </div>
+            <div>
+              <div class="col-head">Builds</div>
+              ${p.builds.map(t=>taskRow(pi,t)).join('')}
+            </div>
+          </div>
+          <div class="yt-area">
+            <div class="col-head">Learning Resources</div>
+            <div class="yt-links">
+              ${p.yt.map(y=>`<a href="${y.l}" target="_blank" class="yt-chip"><span class="yt-dot"></span>${y.n}</a>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  updateSidebar();
+  renderCal();
+  document.getElementById('streak-n').textContent = getStreak();
+}
+
+function taskRow(pi, text){
+  const key = `${pi}::${text}`;
+  const safeId = key.replace(/[^a-z0-9]/gi,'_');
+  const isDone = S.tasks.includes(key);
+  const note = S.notes[key] || '';
+  const lbl = text
+    .replace('[MATH]','<span class="task-tag">MATH</span>')
+    .replace('[AGENTIC]','<span class="task-tag">AGENTIC</span>')
+    .replace('[OWNERSHIP]','<span class="task-tag">OWNERSHIP</span>');
+  return `
+    <div class="task ${isDone?'checked':''}" onclick="toggleTask(event,'${key}')">
+      <div class="chk"><span class="chk-tick">✓</span></div>
+      <span class="task-lbl">${lbl}</span>
+      <button class="note-toggle ${note?'active':''}" onclick="toggleNote(event,'${safeId}')" title="Note">✎</button>
+    </div>
+    <div class="note-box" id="nb-${safeId}">
+      <textarea rows="2" placeholder="Add a note…" oninput="saveNote('${key}',this.value)">${note}</textarea>
+    </div>`;
+}
+
+function togglePhase(i, id){
+  document.getElementById(id).classList.toggle('open');
+}
+
+function toggleTask(e, key){
+  e.stopPropagation();
+  const idx = S.tasks.indexOf(key);
+  if(idx>-1) S.tasks.splice(idx,1);
+  else { S.tasks.push(key); markActivity(); }
+  save(); checkLevelUp(); render();
+}
+
+function toggleNote(e, safeId){
+  e.stopPropagation();
+  document.getElementById('nb-'+safeId)?.classList.toggle('open');
+}
+function saveNote(key, val){
+  S.notes[key] = val.trim(); save();
+}
+
+/* ═══════════════════════════════════════════════
+   SIDEBAR STATS
+═══════════════════════════════════════════════ */
+function updateSidebar(){
+  const total = PHASES.reduce((a,p)=>a+p.skills.length+p.builds.length, 0);
+  const done = S.tasks.length;
+  const pct = Math.round((done/total)*100);
+  const xp = done*10;
+  const {level, xpIn, threshold} = getLevel(xp);
+  const circ = 251.3;
+
+  document.getElementById('xp-lvl').textContent = level;
+  document.getElementById('xp-earned').textContent = xp+' XP';
+  document.getElementById('xp-next').textContent = (threshold-xpIn)+' XP away';
+  document.getElementById('xp-bar-fill').style.width = ((xpIn/threshold)*100)+'%';
+  document.getElementById('xp-arc').style.strokeDashoffset =
+    (circ - (xpIn/threshold)*circ).toFixed(1);
+
+  document.getElementById('s-tasks').textContent = done+'/'+total;
+  document.getElementById('s-pct').textContent = pct+'%';
+
+  const completedPhases = PHASES.filter((_,pi)=>{
+    const a=[...PHASES[pi].skills,...PHASES[pi].builds];
+    return a.filter(t=>S.tasks.includes(pi+'::'+t)).length===a.length;
+  }).length;
+  document.getElementById('s-phases').textContent = completedPhases+'/6';
+
+  // phase bars
+  document.getElementById('phase-bars').innerHTML = PHASES.map((p,pi)=>{
+    const a=[...p.skills,...p.builds];
+    const d=a.filter(t=>S.tasks.includes(pi+'::'+t)).length;
+    const pp=Math.round((d/a.length)*100);
+    return `
+      <div class="pb-item">
+        <div class="pb-label">
+          <span class="name">P${pi+1} · ${p.title.split(' ')[0]}</span>
+          <span class="pct">${pp}%</span>
+        </div>
+        <div class="pb-track"><div class="pb-fill" style="width:${pp}%;background:${p.color}"></div></div>
+      </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════════ */
+function resetAll(){
+  if(!confirm('Reset all progress? This cannot be undone.')) return;
+  S = {tasks:[],notes:{},activity:{},lastLevel:1,celebratedPhases:{},timerSeconds:0,timerDate:''};
+  sessionSeconds=0; save();
+  clearInterval(timerInterval); timerRunning=false;
+  document.getElementById('timer-start-btn').textContent='▶ Start';
+  updateTimerDisplay();
+  render();
+}
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+render();
+</script>
+</body>
+</html>
